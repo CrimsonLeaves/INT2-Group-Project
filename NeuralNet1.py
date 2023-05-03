@@ -36,9 +36,9 @@ val_data = datasets.Flowers102(
 
 # We pass the Dataset as an argument to DataLoader
 
-train_dataloader = DataLoader(training_data, batch_size = 64)
-test_dataloader = DataLoader(test_data, batch_size = 64)
-val_dataloader = DataLoader(val_data, batch_size = 64)
+train_dataloader = DataLoader(training_data, batch_size = 64, shuffle=True)
+test_dataloader = DataLoader(test_data, batch_size = 64, shuffle=True)
+val_dataloader = DataLoader(val_data, batch_size = 64, shuffle=True)
 
 
 #Printing out the shape of the input.
@@ -68,22 +68,23 @@ class NeuralNetwork(nn.Module):
             #Use linear as now 1d
             nn.Flatten(),
             
-            nn.Linear(64*64, 512),
+            nn.Linear(802816, 512),
             nn.ReLU(),
             nn.Linear(512, 102),
             #Run through logsoftmax to classify images.
             nn.LogSoftmax(dim=1)
-            #Use the NLLoss function for logsoftmax.
+            #Use the NLLLoss function for logsoftmax.
             
         )
 
     def forward(self, x):
-        pass
-        """
-        x = self.flatten(x)
-        logits = self.linear_relu_stack(x)
-        return logits
-        """
+       loss = nn.NLLLoss()
+       img, label = batch
+       output = self.network(img)
+       #prints the LogSoftmax probalility.
+       print(output)
+       #Calculate and return loss
 
-#model = NeuralNetwork().to(device)
-#print(model)
+model = NeuralNetwork()
+for batch in train_dataloader:
+    model.forward_step(batch)
