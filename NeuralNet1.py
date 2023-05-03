@@ -34,9 +34,6 @@ val_data = datasets.Flowers102(
 
 )
 
-
-
-
 # We pass the Dataset as an argument to DataLoader
 
 train_dataloader = DataLoader(training_data, batch_size = 64)
@@ -44,31 +41,49 @@ test_dataloader = DataLoader(test_data, batch_size = 64)
 val_dataloader = DataLoader(val_data, batch_size = 64)
 
 
-
-
+#Printing out the shape of the input.
 for X, y in val_dataloader:
     print(f"Shape of X [N, C, H, W]: {X.shape}")
     print(f"Shape of y: {y.shape} {y.dtype}")
     break
-"""
+
+
+
 # Define model
 class NeuralNetwork(nn.Module):
     def __init__(self):
         super().__init__()
-        self.flatten = nn.Flatten()
-        self.linear_relu_stack = nn.Sequential(
-            nn.Linear(28*28, 512),
+        self.network = nn.Sequential(
+            #Run through a series of convolutions
+            #Pass through ReLu activation functions to eliminate negative values.
+            #Pixels cannot be negative.
+            nn.Conv2d(3, 32, kernel_size=3, padding=1, stride=1),
             nn.ReLU(),
-            nn.Linear(512, 512),
+            nn.Conv2d(32,64, kernel_size = 3, stride = 1, padding = 1),
             nn.ReLU(),
-            nn.Linear(512, 10)
+            #Pooling
+            nn.MaxPool2d(2,2),
+            
+            #Flattern into 1d so it can be classified.
+            #Use linear as now 1d
+            nn.Flatten(),
+            
+            nn.Linear(64*64, 512),
+            nn.ReLU(),
+            nn.Linear(512, 102),
+            #Run through logsoftmax to classify images.
+            nn.LogSoftmax(dim=1)
+            #Use the NLLoss function for logsoftmax.
+            
         )
 
     def forward(self, x):
+        pass
+        """
         x = self.flatten(x)
         logits = self.linear_relu_stack(x)
         return logits
+        """
 
-model = NeuralNetwork().to(device)
+#model = NeuralNetwork().to(device)
 #print(model)
-"""
