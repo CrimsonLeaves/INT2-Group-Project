@@ -77,7 +77,7 @@ class NeuralNetwork(nn.Module):
             
         )
 
-    def forward(self, x):
+    def forward_step(self, x):
        loss = nn.NLLLoss()
        img, label = batch
        output = self.network(img)
