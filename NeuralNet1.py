@@ -83,18 +83,43 @@ class NeuralNetwork(nn.Module):
        output = self.network(img)
        #Calculate and return loss
        return loss(output, label)
+    
+    #Run through network without calculating loss.
+    def run_net(self, batch):
+        img, label = batch
+        #return prediction
+        return self.network(img)
+    
+    #Check if it was correct.
+    def correct(self, label, output):
+        #takes a batch as input
+        #outputs how many were correctly predicted.
+        pass 
 
 model = NeuralNetwork()
+learningRate = 0.1
+optimizer = optim.SGD(model.parameters(), lr=learningRate)
 trainingLosses = []
-for batch in train_dataloader:
-    model.forward_step(batch)
-    #record losses
-    trainingLosses.append(loss)
+
+#needs to be done for multiple epochs
+for epoch in range(1):
+    for batch in train_dataloader:
+        loss = model.forward_step(batch)
+        #record losses
+        trainingLosses.append(loss)
     
-    #backward step
-    loss.backward()
+        #backward step
+        loss.backward()
     
-    #optimise
-    optimizerSGD.step()
-    #reset optimizer for when it is used again.
-    optimizerSGD.zero_grad()
+        #optimise
+        optimizer.step()
+        #reset optimizer for when it is used again.
+        optimizer.zero_grad()
+    
+
+#validate the model using the validation dataset
+for batch in val_dataloader:
+    prediction = model.run_net(batch)
+    #calculate how many were correct
+    print(prediction)
+   
