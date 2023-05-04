@@ -92,5 +92,9 @@ for batch in train_dataloader:
     trainingLosses.append(loss)
     
     #backward step
+    loss.backward()
     
     #optimise
+    optimizerSGD.step()
+    #reset optimizer for when it is used again.
+    optimizerSGD.zero_grad()
