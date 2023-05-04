@@ -81,10 +81,16 @@ class NeuralNetwork(nn.Module):
        loss = nn.NLLLoss()
        img, label = batch
        output = self.network(img)
-       #prints the LogSoftmax probalility.
-       print(output)
        #Calculate and return loss
+       return loss(output, label)
 
 model = NeuralNetwork()
+trainingLosses = []
 for batch in train_dataloader:
     model.forward_step(batch)
+    #record losses
+    trainingLosses.append(loss)
+    
+    #backward step
+    
+    #optimise
