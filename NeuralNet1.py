@@ -5,7 +5,8 @@ from torch.utils.data import DataLoader
 from torchvision import datasets
 from torchvision import datasets, transforms, models
 from torchvision.transforms import ToTensor
-
+import numpy as np
+import matplotlib.pyplot as plt
 
 # Download training data 
 training_data = datasets.Flowers102(
@@ -77,7 +78,7 @@ class NeuralNetwork(nn.Module):
         )
       
         
-    #Training
+    #Run through the neural network, calculates the loss.
     def forward_step(self, batch):
         lossFunc = nn.NLLLoss()
         img, label = batch
@@ -86,14 +87,14 @@ class NeuralNetwork(nn.Module):
         return lossFunc(output, label)
      
     #Run through network without calculating loss.
-    #Highest or lowest value is prediection?
+    #Highest value is prediction.
     def run_net(self, batch):
         img, label = batch
         #return prediction
         return self.network(img)
     
     
-#Check if it was correct.
+#Check if it was correct, used for accuracy.
 def correct(labels, output):
     #takes a batch as input
     correct = 0
@@ -108,20 +109,47 @@ def correct(labels, output):
         
     #outputs how many were correctly predicted.        
     return correct
+    
+#calculate the accuracy, with the validation dataset
+def validate_accuracy():
+    total_correct = 0
+    for batch in val_dataloader:
+        #calculate how many were correct
+        prediction = model.run_net(batch)
+        img, labels = batch
+        answer = correct(labels, prediction)
+        total_correct += answer
+    val_accuracy = (total_correct/1020) * 100  
+    return val_accuracy
 
-
+#calculate the loss, with the validation dataset
+def validate_loss():
+    total_loss = []
+    for batch in val_dataloader:
+        loss = model.forward_step(batch)
+        total_loss.append(loss.item())
+    return np.average(total_loss)
+        
+#parameters    
 model = NeuralNetwork()
 learningRate = 0.1
-optimizer = optim.SGD(model.parameters(), lr=learningRate)
-trainingLosses = []
+momentum = 0
+optimizer = optim.SGD(model.parameters(), lr=learningRate, momentum=momentum)
+epochs = 1
+
+#recording losses and accuracy for graphs
+train_losses = []
+val_losses = []
+val_accuracy = []
 
 #needs to be done for multiple epochs
-for epoch in range(10):
+for epoch in range(epochs):
+    total_train_loss = []
     for batch in train_dataloader:
         loss = model.forward_step(batch)
         #record losses
-        trainingLosses.append(loss)
-    
+       
+        total_train_loss.append(loss.item())
         #backward step
         loss.backward()
     
@@ -130,14 +158,29 @@ for epoch in range(10):
         #reset optimizer for when it is used again.
         optimizer.zero_grad()
     
+    """
+    Comment these out if you want to ignore them. (not make graphs)
+    Will make things slower.
+    """
+    #recording the loss for the training per epoch
+    train_losses.append(np.average(total_train_loss))
+    #recording the loss for the validation per epoch
+    val_losses.append(validate_loss())
+    #recording the accuracy for the validation per epoch
+    #val_accuracy.append(validate_accuracy())
 
-#validate the model using the validation dataset
-total_correct = 0
-for batch in val_dataloader:
-    prediction = model.run_net(batch)
-    #calculate how many were correct
-    img, labels = batch
-    answer = correct(labels, prediction)
-    total_correct += answer
-val_accuracy = (total_correct/1020) * 100  
-print(val_accuracy)
+"""
+Making pretty graphs
+Comment out if you don't want them.
+"""
+#Plotting the losses
+x = np.arange(epochs)
+print(train_losses)
+print(val_losses)
+print(x)
+plt.plot(x, train_losses, color='green', label='Training Losses')
+plt.plot(x, val_losses, color='red', label='Validation Losses')
+plt.xlabel('Number of Epochs')
+plt.ylabel('Loss')
+print(validate_accuracy())
+plt.show()
