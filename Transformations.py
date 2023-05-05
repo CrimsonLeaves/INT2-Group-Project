@@ -18,11 +18,8 @@ train_transforms = transforms.Compose([transforms.RandomRotation(30),
                                                            (0.3181, 0.2624, 0.3108))
                                       ])
 
-data_transforms = transforms.Compose([transforms.Resize((224, 224)), 
-                                      transforms.ToTensor(), 
-                                      transforms.Normalize((0.4319, 0.3926, 0.3274),
-                                                           (0.3181, 0.2624, 0.3108))])
-
+data_transforms = transforms.Compose([transforms.Resize((224, 224)),
+                                      transforms.ToTensor(),])
 
 
 # Download training data 
