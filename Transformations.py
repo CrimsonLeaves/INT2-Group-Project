@@ -14,14 +14,13 @@ train_transforms = transforms.Compose([transforms.RandomRotation(30),
                                       transforms.RandomVerticalFlip(), 
                                       transforms.Resize((224, 224)), 
                                       transforms.ToTensor(),
-                                      transforms.Normalize((0.4319, 0.3926, 0.3274), (0.3181, 0.2624, 0.3108))
+                                      transforms.Normalize((0.4319, 0.3926, 0.3274), 
+                                                           (0.3181, 0.2624, 0.3108))
                                       ])
 
+data_transforms = transforms.Compose([transforms.Resize((224, 224)), transforms.ToTensor(), transforms.Normalize((0.4319, 0.3926, 0.3274),(0.3181, 0.2624, 0.3108))])
 
-data_transforms = transforms.Compose([transforms.Resize((224, 224)), 
-                                      transforms.ToTensor(),
-                                      transforms.Normalize((0.4319, 0.3926, 0.3274), (0.3181, 0.2624, 0.3108))
-                                      ])
+
 
 # Download training data 
 training_data = datasets.Flowers102(
@@ -37,7 +36,8 @@ test_data = datasets.Flowers102(
     root="flowers-102",
     split="test",
     download=True,
-    transform=data_transforms,
+    transform = data_transforms
+
 
 )
 
@@ -46,8 +46,9 @@ val_data = datasets.Flowers102(
     root="flowers-102",
     split="val",
     download=True,
-    transform=data_transforms,
-    ),
+    transform=data_transforms
+
+)
 
 
 
@@ -162,7 +163,7 @@ model = NeuralNetwork()
 learningRate = 0.1
 momentum = 0
 optimizer = optim.SGD(model.parameters(), lr=learningRate, momentum=momentum)
-epochs = 10
+epochs = 1
 
 #recording losses and accuracy for graphs
 train_losses = []
@@ -210,5 +211,4 @@ Comment out if you don't want them.
 #plt.xlabel('Number of Epochs')
 #plt.ylabel('Loss')
 print("accuracy =", validate_accuracy())
-print("loss =", validate_loss())
 #plt.show()
