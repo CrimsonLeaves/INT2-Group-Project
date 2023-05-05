@@ -38,14 +38,14 @@ class NeuralNetwork(nn.Module):
     def __init__(self):
         super().__init__()
         self.ConvStack = nn.Sequential(
-            nn.Conv2d(3, 32, 3, padding=1),
+            nn.Conv2d(3, 32, 3, padding=0),
             nn.ReLU(),
-            nn.Conv2d(32, 32, 3, padding=1),
+            nn.Conv2d(32, 32, 3, padding=0),
             nn.ReLU(),
             nn.MaxPool2d(2, 2),
-            nn.Conv2d(32, 64, 3, padding=1),
+            nn.Conv2d(32, 64, 3, padding=0),
             nn.ReLU(),
-            nn.Conv2d(64, 64, 3, padding=1),
+            nn.Conv2d(64, 64, 3, padding=0),
             nn.ReLU(),
             nn.MaxPool2d(2, 2),
             # nn.Conv2d(64, 128, 3, padding=1),
@@ -63,7 +63,7 @@ class NeuralNetwork(nn.Module):
         )
         self.Flatten = nn.Flatten()
         self.LinearStack = nn.Sequential(
-            nn.Linear(200704, 1024),
+            nn.Linear(179776, 1024),
             nn.ReLU(),
             nn.Linear(1024, 512),
             # nn.ReLU(),
@@ -85,7 +85,7 @@ print(model)
 criterion = nn.CrossEntropyLoss()
 optimiser = optim.SGD(model.parameters(), lr=0.01, momentum=0.5)
 
-n_epochs = 50
+n_epochs = 65
 train_losslist = []
 test_losslist = []
 test_loss_min = 100000
