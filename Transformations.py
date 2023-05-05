@@ -8,15 +8,17 @@ from torchvision.transforms import ToTensor
 import numpy as np
 import matplotlib.pyplot as plt
 
-
-
-
-
 # Define transforms
-data_transforms = transforms.Compose([transforms.RandomRotation(30),
+train_transforms = transforms.Compose([transforms.RandomRotation(30),
                                       transforms.RandomHorizontalFlip(),
                                       transforms.RandomVerticalFlip(), 
                                       transforms.Resize((224, 224)), 
+                                      transforms.ToTensor(),
+                                      transforms.Normalize((0.4319, 0.3926, 0.3274), (0.3181, 0.2624, 0.3108))
+                                      ])
+
+
+data_transforms = transforms.Compose([transforms.Resize((224, 224)), 
                                       transforms.ToTensor(),
                                       transforms.Normalize((0.4319, 0.3926, 0.3274), (0.3181, 0.2624, 0.3108))
                                       ])
@@ -26,7 +28,7 @@ training_data = datasets.Flowers102(
     root="flowers-102",
     split="train",
     download=True,
-    transform = data_transforms
+    transform = train_transforms
 
 )
 
@@ -35,7 +37,7 @@ test_data = datasets.Flowers102(
     root="flowers-102",
     split="test",
     download=True,
-    transform=transforms.Compose([transforms.Resize((224, 224)), transforms.ToTensor()]),
+    transform=data_transforms,
 
 )
 
@@ -44,9 +46,10 @@ val_data = datasets.Flowers102(
     root="flowers-102",
     split="val",
     download=True,
-    transform=transforms.Compose([transforms.Resize((224, 224)), transforms.ToTensor()]),
+    transform=data_transforms,
+    ),
 
-)
+
 
 
 # We pass the Dataset as an argument to DataLoader
