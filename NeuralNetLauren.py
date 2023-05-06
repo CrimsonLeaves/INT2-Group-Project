@@ -31,8 +31,8 @@ training_data = datasets.Flowers102(root="data", split="train", download=True, t
 # Imports the testing dataset
 test_data = datasets.Flowers102(root="data", split="test", download=True, transform=test_transforms)
 
-train_dataloader = DataLoader(training_data, batch_size=4, shuffle=True)
-test_dataloader = DataLoader(test_data, batch_size=4, shuffle=True)
+train_dataloader = DataLoader(training_data, batch_size=5, shuffle=True)
+test_dataloader = DataLoader(test_data, batch_size=5, shuffle=True)
 
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 print(f"Using {device} device")
