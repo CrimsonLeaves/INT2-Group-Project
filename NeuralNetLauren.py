@@ -7,16 +7,20 @@ import torch.optim as optim
 
 mean_val, std_val = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
 train_transforms = tt.Compose([
-    tt.RandomRotation(30),
-    tt.RandomResizedCrop(224),
+    tt.RandomRotation(25),
     tt.RandomHorizontalFlip(),
+    tt.RandomResizedCrop((224,224)),
+    #tt.Resize((224, 224)),
     tt.ToTensor(),
     tt.Normalize(mean_val, std_val)
 ])
 
-valid_transforms = tt.Compose([
-    tt.Resize(255),
-    tt.CenterCrop(224),
+# The transformations here are allowed according to the assessment brief
+# The first transformation simply resizes the image to allow it to be loaded into a tensor
+# The second transformation converts the image to a tensor for training
+# The third transformation is normalising / mean centring the data in the same way as the training data
+test_transforms = tt.Compose([
+    tt.Resize((224, 224)),
     tt.ToTensor(),
     tt.Normalize(mean_val, std_val)
 ])
@@ -25,7 +29,7 @@ valid_transforms = tt.Compose([
 training_data = datasets.Flowers102(root="data", split="train", download=True, transform=train_transforms)
 
 # Imports the testing dataset
-test_data = datasets.Flowers102(root="data", split="test", download=True, transform=valid_transforms)
+test_data = datasets.Flowers102(root="data", split="test", download=True, transform=test_transforms)
 
 train_dataloader = DataLoader(training_data, batch_size=4, shuffle=True)
 test_dataloader = DataLoader(test_data, batch_size=4, shuffle=True)
@@ -54,8 +58,6 @@ class NeuralNetwork(nn.Module):
             # nn.ReLU(),
             # nn.MaxPool2d(2, 2),
             # nn.Conv2d(128, 256, 3, padding=1),
-            # nn.ReLU(),
-            # nn.Conv2d(256, 256, 3, padding=1),
             # nn.ReLU(),
             # nn.Conv2d(256, 256, 3, padding=1),
             # nn.ReLU(),
