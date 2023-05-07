@@ -50,6 +50,7 @@ class NeuralNetwork(nn.Module):
             nn.Conv2d(32, 32, 3, padding=0),
             nn.ReLU(),
             nn.MaxPool2d(2, 2),
+
             nn.Conv2d(32, 64, 3, padding=0),
             nn.ReLU(),
             nn.Conv2d(64, 64, 3, padding=0),
@@ -73,13 +74,13 @@ class NeuralNetwork(nn.Module):
             nn.BatchNorm1d(1024),
             nn.ReLU(),
             nn.Dropout(p=0.2),
-            nn.Linear(1024, 512),
-            nn.BatchNorm1d(512),
+            nn.Linear(1024, 1024),
+            nn.BatchNorm1d(1024),
             # nn.ReLU(),
             # nn.Linear(512, 256),
             nn.ReLU(),
             nn.Dropout(p=0.2),
-            nn.Linear(512, 102),
+            nn.Linear(1024, 102),
         )
 
     def forward(self, x):
