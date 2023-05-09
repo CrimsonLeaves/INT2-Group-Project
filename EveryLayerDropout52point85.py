@@ -104,11 +104,16 @@ class NeuralNetwork(nn.Module):
 model = NeuralNetwork().to(device)
 print(model)
 
+# input_names = ["Flowers-102"]
+# output_names = ["Flower Categories Prediction"]
+#
+# dummy_input = torch.randn(64, 3, 224, 224, device="cuda")
+# torch.onnx.export(model, dummy_input, "model.onnx", input_names=input_names, output_names=output_names)
 
 criterion = nn.CrossEntropyLoss()
 optimiser = optim.AdamW(model.parameters(), lr=0.0005, betas=(0.9, 0.999), weight_decay=0.1)
 
-n_epochs = 100
+n_epochs = 125
 train_losslist = []
 test_losslist = []
 test_loss_min = 100000
