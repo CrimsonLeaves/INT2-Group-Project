@@ -33,11 +33,11 @@ training_data = datasets.Flowers102(root="data", split="train", download=True, t
 # Imports the testing dataset
 test_data = datasets.Flowers102(root="data", split="test", download=True, transform=data_transforms)
 
-val_data = datasets.Flowers102(root="data", split="val", download=True, transform=data_transforms)
+# val_data = datasets.Flowers102(root="data", split="val", download=True, transform=data_transforms)
 
 train_dataloader = DataLoader(training_data, batch_size=64, shuffle=True)
-test_dataloader = DataLoader(val_data, batch_size=64, shuffle=True)
-val_dataloader = DataLoader(val_data, batch_size=64, shuffle=True)
+test_dataloader = DataLoader(training_data, batch_size=64, shuffle=True)
+# val_dataloader = DataLoader(val_data, batch_size=64, shuffle=True)
 
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 print(f"Using {device} device")
@@ -106,9 +106,9 @@ print(model)
 
 
 criterion = nn.CrossEntropyLoss()
-optimiser = optim.AdamW(model.parameters(), lr=0.0001, betas=(0.9, 0.999), weight_decay=0.1)
+optimiser = optim.AdamW(model.parameters(), lr=0.0001, betas=(0.9, 0.999), weight_decay=0.03)
 
-n_epochs = 100
+n_epochs = 200
 train_losslist = []
 test_losslist = []
 test_loss_min = 100000
